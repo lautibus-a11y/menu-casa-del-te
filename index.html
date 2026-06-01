@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Komorebi &bull; Casa de Té Inmersiva</title>
+  <meta name="description" content="Menú botánico estacional de Komorebi, una casa de té inmersiva. Descubrí nuestra selección de tés, cafés, tortas y brunch.">
+  <meta name="theme-color" content="#0a0d0b">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="noise-overlay"></div>
+  <div class="ambient-glow"></div>
+  <div class="ambient-glow-bottom"></div>
+  <div id="menu-bg-glow" class="glow-hidden"></div>
+
+  <!-- Hero -->
+  <section id="hero-section" aria-label="Portada Komorebi">
+    <div class="hero-background"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <img src="logo-komorebi.png" alt="Komorebi" class="hero-logo">
+      <p class="hero-subtitle">La luz que se filtra a través de las hojas</p>
+      <button class="btn-cinematic" id="btn-enter-menu" type="button">
+        Descubrir Menú
+      </button>
+    </div>
+  </section>
+
+  <!-- Menu -->
+  <main id="menu-container">
+    <header class="menu-header">
+      <button class="btn-back-floating" id="btn-back-to-hero" type="button" title="Volver a la portada">
+        <i data-lucide="arrow-left"></i>
+      </button>
+      <img src="logo-komorebi.png" alt="Komorebi" class="menu-logo-img">
+      <p>Menú Botánico Estacional</p>
+    </header>
+
+    <div class="tabs-wrapper">
+      <nav class="tabs-container" id="tabs-navigation" role="tablist"></nav>
+    </div>
+
+    <section class="menu-grid" id="menu-items-grid" aria-label="Items del menú"></section>
+  </main>
+
+  <!-- Modal -->
+  <div id="product-modal" aria-hidden="true" role="dialog" aria-labelledby="modal-title">
+    <div class="modal-blur-bg" id="modal-close-overlay"></div>
+    <div class="modal-glass-container">
+      <button class="modal-close-btn" id="modal-close-btn" type="button" aria-label="Cerrar">
+        <i data-lucide="x"></i>
+      </button>
+      <div class="modal-img-container">
+        <img id="modal-img" src="" alt="" class="modal-img">
+      </div>
+      <div class="modal-content">
+        <h3 class="modal-title" id="modal-title">Título</h3>
+        <p class="modal-price-tag" id="modal-price">Precio</p>
+        <p class="modal-long-desc" id="modal-desc">Descripción</p>
+        <div class="modal-footer">
+          <button class="modal-btn-action" id="modal-order-btn" type="button">
+            <i data-lucide="bell"></i>
+            Llamar Camarero
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom HUD -->
+  <div class="bottom-hud" id="bottom-hud">
+    <div class="hud-item">
+      <i data-lucide="clock"></i>
+      <span>Abierto &bull; 08:00 &ndash; 20:00</span>
+    </div>
+    <div class="hud-separator"></div>
+    <div class="hud-item">
+      <i data-lucide="map-pin"></i>
+      <span>Bosque Zen, Mesa 12</span>
+    </div>
+    <div class="hud-separator"></div>
+    <button class="hud-item" id="hud-bell" type="button" style="cursor:pointer; border:none; background:none;">
+      <i data-lucide="pocket"></i>
+      <span>Llamar Servicio</span>
+    </button>
+  </div>
+
+  <!-- Cart Bar -->
+  <div id="cart-bar" role="button" tabindex="0" aria-label="Abrir carrito">
+    <div class="cart-bar-icon">
+      <i data-lucide="shopping-cart"></i>
+      <span class="cart-badge" id="cart-badge">0</span>
+    </div>
+    <div class="cart-bar-divider"></div>
+    <div class="cart-bar-info">
+      <span class="cart-bar-count" id="cart-bar-count"><span>Items: </span>0</span>
+      <span class="cart-bar-total" id="cart-bar-total">$0</span>
+    </div>
+  </div>
+
+  <!-- Cart Modal -->
+  <div id="cart-modal" aria-hidden="true" role="dialog" aria-labelledby="cart-modal-title">
+    <div class="modal-blur-bg" id="cart-modal-close-overlay"></div>
+    <div class="cart-modal-container">
+      <div class="cart-modal-header">
+        <h3 id="cart-modal-title">
+          <i data-lucide="shopping-cart"></i>
+          Tu Pedido
+        </h3>
+        <button class="modal-close-btn cart-modal-close-btn" id="cart-modal-close-btn" type="button" aria-label="Cerrar carrito">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="cart-modal-body" id="cart-modal-body">
+        <div class="cart-empty-state">
+          <i data-lucide="shopping-bag"></i>
+          <p>Tu carrito está vacío</p>
+        </div>
+      </div>
+      <div class="cart-modal-footer" id="cart-modal-footer">
+        <div class="cart-total-row">
+          <span class="cart-total-label">Total</span>
+          <span class="cart-total-amount" id="cart-total-amount">$0</span>
+        </div>
+        <div class="cart-table-row">
+          <label for="table-number-input">Mesa N°</label>
+          <input type="number" id="table-number-input" class="cart-table-input" value="1" min="1" max="99">
+        </div>
+        <div class="cart-actions">
+          <button class="btn-cart-action btn-cart-primary" id="cart-send-btn" type="button">
+            <i data-lucide="bell"></i>
+            Enviar a Camarero
+          </button>
+          <button class="btn-cart-action btn-cart-danger" id="cart-clear-btn" type="button">
+            <i data-lucide="trash-2"></i>
+            Vaciar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts (order matters: lucide → data → app) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
