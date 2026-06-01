@@ -1,15 +1,7 @@
 {
+  "framework": null,
   "trailingSlash": false,
   "headers": [
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
     {
       "source": "/(.*\\.(png|svg|jpg|jpeg|webp|ico))",
       "headers": [
