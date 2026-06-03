@@ -480,6 +480,118 @@ var Komorebi = Komorebi || {};
     }, HERO_RETURN_DELAY_MS);
   }
 
+  /* --- Pilares (Stacked Cards Scroll + Parallax + Blur) --- */
+
+  function initPilares() {
+    var section = document.getElementById('pilares');
+    var stack = document.getElementById('pilares-stack');
+    if (!section || !stack) return;
+
+    var cards = stack.querySelectorAll('.pilar-card');
+    var ticking = false;
+    var scrollProgress = 0;
+
+    function clamp(v, min, max) {
+      return Math.max(min, Math.min(max, v));
+    }
+
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function calcCardTransform(card, t) {
+      var totalCards = cards.length;
+      var index = parseInt(card.getAttribute('data-index'), 10);
+      var stepSize = 1 / totalCards;
+      var cardStart = index * stepSize;
+      var cardEnd = (index + 1) * stepSize;
+
+      var localT = (scrollProgress - cardStart) / stepSize;
+      localT = clamp(localT, 0, 1);
+
+      var translateY, scale, opacity, blurAmount, imgOffset, zIdx;
+
+      if (localT < 0.3) {
+        var p = localT / 0.3;
+        p = p * p * (3 - 2 * p);
+        translateY = lerp(80, 0, p);
+        scale = lerp(0.88, 1, p);
+        opacity = lerp(0, 1, p);
+        blurAmount = lerp(12, 0, p);
+        imgOffset = lerp(20, 0, p);
+        zIdx = totalCards - index;
+      } else if (localT < 0.7) {
+        translateY = 0;
+        scale = 1;
+        opacity = 1;
+        blurAmount = 0;
+        imgOffset = 0;
+        zIdx = totalCards - index + 10;
+      } else {
+        var p = (localT - 0.7) / 0.3;
+        p = p * p * (3 - 2 * p);
+        translateY = lerp(0, -80, p);
+        scale = lerp(1, 0.92, p);
+        opacity = lerp(1, 0, p);
+        blurAmount = lerp(0, 10, p);
+        imgOffset = lerp(0, -15, p);
+        zIdx = totalCards - index;
+      }
+
+      return {
+        y: translateY,
+        scale: scale,
+        opacity: opacity,
+        blur: blurAmount,
+        imgOffset: imgOffset,
+        zIndex: zIdx,
+      };
+    }
+
+    function updatePilares() {
+      var rect = section.getBoundingClientRect();
+      var sectionHeight = section.offsetHeight;
+      var viewportHeight = window.innerHeight;
+
+      var availableScroll = sectionHeight - viewportHeight;
+      if (availableScroll <= 0) {
+        scrollProgress = 1;
+      } else {
+        scrollProgress = clamp(-rect.top / availableScroll, 0, 1);
+      }
+
+      Array.prototype.forEach.call(cards, function (card) {
+        var t = calcCardTransform(card, scrollProgress);
+        card.style.zIndex = t.zIndex;
+        card.style.transform =
+          'translateY(' + t.y.toFixed(2) + 'px) scale(' + t.scale.toFixed(4) + ')';
+        card.style.opacity = t.opacity.toFixed(4);
+        card.style.filter = 'blur(' + t.blur.toFixed(2) + 'px)';
+
+        var img = card.querySelector('.pilar-card-img-wrap img');
+        if (img) {
+          img.style.transform = 'translateY(' + t.imgOffset.toFixed(2) + 'px) scale(1.12)';
+        }
+      });
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(function () {
+          updatePilares();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+
+    // Initial update
+    setTimeout(updatePilares, 100);
+  }
+
   /* --- Events --- */
 
   function setupEvents() {
@@ -542,6 +654,7 @@ var Komorebi = Komorebi || {};
     renderCategory(currentCategory);
     setupEvents();
     renderCartBar();
+    initPilares();
     refreshLucide();
     setTimeout(refreshLucide, LUCIde_REFRESH_DELAY_MS);
   });
