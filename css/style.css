@@ -1311,6 +1311,246 @@ body {
   margin-right: 8px;
 }
 
+/* --- 14. Eventos (Auto-Unfold Japandi List) --- */
+#eventos {
+  position: relative;
+  z-index: 5;
+  min-height: 100vh;
+  padding: 14vh 1.5rem 10vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(180deg, transparent 0%, rgba(10, 13, 11, 0.5) 100%);
+  overflow: hidden;
+}
+
+.eventos-glow {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70vw;
+  height: 50vh;
+  background: radial-gradient(ellipse, rgba(212, 197, 179, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.eventos-header {
+  text-align: center;
+  margin-bottom: 6vh;
+  position: relative;
+  z-index: 1;
+}
+
+.eventos-header-tag {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  color: rgba(212, 197, 179, 0.5);
+  margin-bottom: 1rem;
+  font-weight: 400;
+}
+
+.eventos-header h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  color: var(--color-white-smoke);
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.02em;
+}
+
+.eventos-header p {
+  font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+}
+
+.eventos-list {
+  max-width: 680px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Each Event Item --- */
+.evento-item {
+  padding: 1.8rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  opacity: 0.35;
+  filter: blur(2px);
+  transform: translateY(20px);
+  transition:
+    opacity 1s var(--ease-cinematic),
+    filter 1s var(--ease-cinematic),
+    transform 1s var(--ease-cinematic);
+  will-change: opacity, filter, transform;
+}
+
+.evento-item:last-child {
+  border-bottom: none;
+}
+
+.evento-item.active {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+.evento-item.active ~ .evento-item {
+  opacity: 0.2;
+  filter: blur(1px);
+  transform: translateY(8px);
+}
+
+/* --- Header Row --- */
+.evento-item-header {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  cursor: default;
+  position: relative;
+}
+
+.evento-number {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 200;
+  color: rgba(212, 197, 179, 0.08);
+  line-height: 1;
+  min-width: 44px;
+  transition: color 0.8s var(--ease-cinematic);
+}
+
+.evento-item.active .evento-number {
+  color: rgba(212, 197, 179, 0.25);
+}
+
+.evento-icon-wrap {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(212, 197, 179, 0.4);
+  transition:
+    background 0.8s var(--ease-cinematic),
+    border-color 0.8s var(--ease-cinematic),
+    color 0.8s var(--ease-cinematic),
+    transform 0.8s var(--ease-cinematic);
+  flex-shrink: 0;
+}
+
+.evento-item.active .evento-icon-wrap {
+  background: rgba(212, 197, 179, 0.08);
+  border-color: rgba(212, 197, 179, 0.15);
+  color: var(--color-gold-warm);
+  animation: iconFloat 4s infinite ease-in-out;
+}
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.evento-icon-wrap svg {
+  width: 20px;
+  height: 20px;
+}
+
+.evento-item-header h3 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+  font-weight: 400;
+  color: var(--color-white-smoke);
+  letter-spacing: -0.01em;
+  transition: color 0.8s var(--ease-cinematic);
+}
+
+.evento-item.active .evento-item-header h3 {
+  color: var(--color-gold-warm);
+}
+
+/* --- Expandable Body --- */
+.evento-item-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 1.2s var(--ease-cinematic);
+  padding-left: calc(44px + 1.2rem + 44px + 1.2rem);
+}
+
+.evento-item.active .evento-item-body {
+  grid-template-rows: 1fr;
+}
+
+.evento-item-body > div {
+  overflow: hidden;
+}
+
+.evento-line {
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(212, 197, 179, 0.4), transparent);
+  margin: 1.2rem 0 1rem;
+  transition: width 1.2s var(--ease-cinematic);
+}
+
+.evento-item.active .evento-line {
+  width: 60px;
+}
+
+.evento-desc {
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 300;
+  margin-bottom: 1rem;
+  opacity: 0;
+  transform: translateY(8px);
+  filter: blur(4px);
+  transition:
+    opacity 0.8s 0.3s var(--ease-cinematic),
+    transform 0.8s 0.3s var(--ease-cinematic),
+    filter 0.8s 0.3s var(--ease-cinematic);
+}
+
+.evento-item.active .evento-desc {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.evento-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.6s 0.5s var(--ease-cinematic),
+    transform 0.6s 0.5s var(--ease-cinematic);
+}
+
+.evento-item.active .evento-meta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.evento-meta span {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.06em;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
 /* --- 13. Pilares (Stacked Cards Scroll + Parallax + Blur) --- */
 #pilares {
   position: relative;
@@ -1695,5 +1935,38 @@ body {
     position: relative;
     top: auto;
     margin-bottom: 2rem;
+  }
+
+  /* Eventos responsive */
+  #eventos {
+    padding: 8vh 1.2rem 6vh;
+  }
+
+  .eventos-list {
+    max-width: 100%;
+  }
+
+  .evento-item-body {
+    padding-left: 0;
+    margin-top: 0.5rem;
+  }
+
+  .evento-item-header {
+    gap: 0.8rem;
+  }
+
+  .evento-number {
+    min-width: 30px;
+    font-size: 1.3rem;
+  }
+
+  .evento-icon-wrap {
+    width: 36px;
+    height: 36px;
+  }
+
+  .evento-icon-wrap svg {
+    width: 16px;
+    height: 16px;
   }
 }

@@ -592,6 +592,33 @@ var Komorebi = Komorebi || {};
     setTimeout(updatePilares, 100);
   }
 
+  /* --- Eventos (Auto-Unfold Japandi) --- */
+
+  function initEventos() {
+    var items = document.querySelectorAll('.evento-item');
+    if (!items.length) return;
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          Array.prototype.forEach.call(items, function (item) {
+            item.classList.remove('active');
+          });
+          entry.target.classList.add('active');
+        } else {
+          entry.target.classList.remove('active');
+        }
+      });
+    }, {
+      threshold: 0.45,
+      rootMargin: '0px 0px -40px 0px',
+    });
+
+    Array.prototype.forEach.call(items, function (item) {
+      observer.observe(item);
+    });
+  }
+
   /* --- Events --- */
 
   function setupEvents() {
@@ -655,6 +682,7 @@ var Komorebi = Komorebi || {};
     setupEvents();
     renderCartBar();
     initPilares();
+    initEventos();
     refreshLucide();
     setTimeout(refreshLucide, LUCIde_REFRESH_DELAY_MS);
   });
