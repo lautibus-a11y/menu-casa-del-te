@@ -227,7 +227,16 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.3em;
   color: rgba(245, 245, 247, 0.7);
-  margin-bottom: 3.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.hero-desc {
+  font-size: clamp(0.85rem, 1.1vw, 1rem);
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(245, 245, 247, 0.5);
+  max-width: 520px;
+  margin: 0 auto 3rem;
 }
 
 /* Hidden state for hero */
@@ -1579,6 +1588,10 @@ body {
 
   .modal-content {
     padding: 1.8rem;
+  }
+
+  .hero-desc {
+    display: none;
   }
 
   #cart-bar {
